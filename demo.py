@@ -94,7 +94,10 @@ def format_memories(results: list[dict[str, Any]]) -> str:
         return "[dim]No memories found[/dim]"
     lines: list[str] = []
     for r in results:
-        memory_text = r.get("memory", str(r))
+        if isinstance(r, dict):
+            memory_text = r.get("memory", str(r))
+        else:
+            memory_text = str(r)
         lines.append(f"• {memory_text}")
     return "\n".join(lines)
 

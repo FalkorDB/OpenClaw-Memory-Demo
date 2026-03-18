@@ -116,8 +116,12 @@ def cmd_memories(m, user_id: str) -> None:
     table.add_column("Memory", style="white")
 
     for entry in results:
-        mem_id = entry.get("id", "?")
-        memory = entry.get("memory", str(entry))
+        if isinstance(entry, dict):
+            mem_id = entry.get("id", "?")
+            memory = entry.get("memory", str(entry))
+        else:
+            mem_id = "?"
+            memory = str(entry)
         table.add_row(str(mem_id), memory)
 
     console.print(table)
@@ -146,9 +150,14 @@ def cmd_search(m, query: str, user_id: str) -> None:
     table.add_column("Score", style="cyan", justify="right")
 
     for entry in items:
-        mem_id = str(entry.get("id", "?"))
-        memory = entry.get("memory", str(entry))
-        score = entry.get("score", "")
+        if isinstance(entry, dict):
+            mem_id = str(entry.get("id", "?"))
+            memory = entry.get("memory", str(entry))
+            score = entry.get("score", "")
+        else:
+            mem_id = "?"
+            memory = str(entry)
+            score = ""
         score_str = f"{score:.3f}" if isinstance(score, float) else str(score)
         table.add_row(mem_id, memory, score_str)
 
@@ -296,7 +305,12 @@ def main() -> None:
             memories = recall_memories(m, user_input, user_id)
 
         if memories:
-            summary = ", ".join(entry.get("memory", "…")[:60] for entry in memories[:3])
+            summary = ", ".join(
+                (entry.get("memory", "…") if isinstance(entry, dict) else str(entry))[
+                    :60
+                ]
+                for entry in memories[:3]
+            )
             suffix = f" (+{len(memories) - 3} more)" if len(memories) > 3 else ""
             console.print(
                 f"[dim cyan]📎 Recalled {len(memories)} "
