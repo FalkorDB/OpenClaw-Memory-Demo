@@ -100,31 +100,55 @@ def cmd_memories(m, user_id: str) -> None:
     """List all stored memories for the current user."""
     try:
         all_mems = m.get_all(user_id=user_id)
-        results = (
-            all_mems.get("results", []) if isinstance(all_mems, dict) else all_mems
-        )
+        if isinstance(all_mems, dict):
+            results = all_mems.get("results", [])
+            relations = all_mems.get("relations", [])
+        else:
+            results = all_mems
+            relations = []
     except Exception as e:
         console.print(f"[red]Error fetching memories: {e}[/red]")
         return
 
-    if not results:
+    if not results and not relations:
         console.print("[yellow]No memories stored yet.[/yellow]")
         return
 
-    table = Table(title=f"Memories for [bold]{user_id}[/bold]", show_lines=True)
-    table.add_column("ID", style="dim", max_width=36)
-    table.add_column("Memory", style="white")
+    if results:
+        table = Table(title=f"Memories for [bold]{user_id}[/bold]", show_lines=True)
+        table.add_column("ID", style="dim", max_width=36)
+        table.add_column("Memory", style="white")
 
-    for entry in results:
-        if isinstance(entry, dict):
-            mem_id = entry.get("id", "?")
-            memory = entry.get("memory", str(entry))
-        else:
-            mem_id = "?"
-            memory = str(entry)
-        table.add_row(str(mem_id), memory)
+        for entry in results:
+            if isinstance(entry, dict):
+                mem_id = entry.get("id", "?")
+                memory = entry.get("memory", str(entry))
+            else:
+                mem_id = "?"
+                memory = str(entry)
+            table.add_row(str(mem_id), memory)
 
-    console.print(table)
+        console.print(table)
+
+    if relations:
+        rel_table = Table(
+            title=f"Graph Relations for [bold]{user_id}[/bold]", show_lines=True
+        )
+        rel_table.add_column("Source", style="cyan")
+        rel_table.add_column("Relationship", style="yellow")
+        rel_table.add_column("Target", style="green")
+
+        for rel in relations:
+            if isinstance(rel, dict):
+                rel_table.add_row(
+                    rel.get("source", "?"),
+                    rel.get("relationship", "?"),
+                    rel.get("target", "?"),
+                )
+            else:
+                rel_table.add_row(str(rel), "", "")
+
+        console.print(rel_table)
 
 
 def cmd_search(m, query: str, user_id: str) -> None:
