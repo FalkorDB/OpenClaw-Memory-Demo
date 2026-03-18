@@ -109,7 +109,9 @@ def get_graph_stats(m: Any, user_id: str) -> tuple[int, int]:
             for item in all_data:
                 if isinstance(item, dict):
                     src = item.get("source") or item.get("from")
-                    tgt = item.get("target") or item.get("to") or item.get("destination")
+                    tgt = (
+                        item.get("target") or item.get("to") or item.get("destination")
+                    )
                     if src:
                         nodes.add(str(src))
                     if tgt:
@@ -196,7 +198,9 @@ def scene_2_retrieval(m: Any, user_ids: list[str]) -> None:
         console.print()
 
     # Graph stats
-    console.print("  [bold bright_blue]📊 Knowledge Graph Statistics[/bold bright_blue]\n")
+    console.print(
+        "  [bold bright_blue]📊 Knowledge Graph Statistics[/bold bright_blue]\n"
+    )
 
     stats_table = Table(
         show_header=True,
@@ -307,9 +311,7 @@ def scene_4_isolation_proof(m: Any) -> None:
     carol_results = m.search(query, user_id="carol", limit=5)
 
     if carol_results:
-        console.print(
-            "  [green]✓[/green] Carol's graph returns PyTorch memories:\n"
-        )
+        console.print("  [green]✓[/green] Carol's graph returns PyTorch memories:\n")
         console.print(
             Panel(
                 format_memories(carol_results),
@@ -324,14 +326,10 @@ def scene_4_isolation_proof(m: Any) -> None:
         )
 
     # Isolation tree
-    tree = Tree(
-        "🔒 [bold bright_blue]FalkorDB Graph Isolation[/bold bright_blue]"
-    )
+    tree = Tree("🔒 [bold bright_blue]FalkorDB Graph Isolation[/bold bright_blue]")
     for user_id, profile in DEVELOPERS.items():
         color = profile["color"]
-        branch = tree.add(
-            f"[{color}]{profile['emoji']} {profile['name']}[/{color}]"
-        )
+        branch = tree.add(f"[{color}]{profile['emoji']} {profile['name']}[/{color}]")
         branch.add(f"[dim]Graph:[/dim] [bold]mem0_{user_id}[/bold]")
         branch.add(f"[dim]Role:[/dim] {profile['role']}")
         nodes, rels = get_graph_stats(m, user_id)

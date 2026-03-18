@@ -83,9 +83,7 @@ def init_mem0():
 
     try:
         m = Memory.from_config(config)
-        console.print(
-            f"[green]✓ Connected to FalkorDB ({mode} mode)[/green]"
-        )
+        console.print(f"[green]✓ Connected to FalkorDB ({mode} mode)[/green]")
         return m
     except Exception as e:
         console.print(

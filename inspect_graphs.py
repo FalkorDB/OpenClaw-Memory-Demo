@@ -33,7 +33,7 @@ def extract_user_id(graph_name: str, database_prefix: str = "mem0") -> str:
     """Extract user_id from graph name (e.g., 'mem0_alice' -> 'alice')."""
     prefix = f"{database_prefix}_"
     if graph_name.startswith(prefix):
-        return graph_name[len(prefix):]
+        return graph_name[len(prefix) :]
     return graph_name
 
 
@@ -136,7 +136,9 @@ def display_user_graph(
             labels_str = ", ".join(labels_list) if labels_list else "(no label)"
 
             if detailed:
-                node_table.add_row(node_id, labels_str, name, format_node_properties(node))
+                node_table.add_row(
+                    node_id, labels_str, name, format_node_properties(node)
+                )
             else:
                 node_table.add_row(node_id, labels_str, name)
 
