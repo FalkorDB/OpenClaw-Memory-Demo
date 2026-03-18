@@ -37,9 +37,11 @@ Inspired by the [Mem0 × OpenClaw blog post](https://mem0.ai/blog/mem0-memory-fo
 docker compose up -d
 ```
 
+FalkorDB Browser is available at [http://localhost:3000](http://localhost:3000).
+
 Or without Docker Compose:
 ```bash
-docker run --rm -p 6379:6379 falkordb/falkordb:latest
+docker run --rm -p 6379:6379 -p 3000:3000 falkordb/falkordb:latest
 ```
 
 ### 2. Install dependencies
@@ -57,7 +59,11 @@ pip install mem0ai mem0-falkordb openai falkordb rich python-dotenv
 
 ```bash
 cp .env.example .env
-# Edit .env and add your OpenAI API key
+```
+
+Edit `.env` and set your **real** OpenAI API key:
+```env
+OPENAI_API_KEY=sk-proj-...
 ```
 
 ### 4. Run!
